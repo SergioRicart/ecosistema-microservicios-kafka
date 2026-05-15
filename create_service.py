@@ -387,10 +387,6 @@ def write_file(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def touch_gitkeep(folder: Path) -> None:
-    folder.mkdir(parents=True, exist_ok=True)
-    (folder / ".gitkeep").touch()
-
 
 def validate_name(name: str) -> str:
     if not re.fullmatch(r"[a-z][a-z0-9]*", name):
@@ -445,8 +441,8 @@ def main() -> None:
     # Módulo events
     events = base / f"{module}-events"
     write_file(events / "pom.xml", render(EVENTS_POM, ctx))
-    touch_gitkeep(events / "src" / "main" / "java")
-    touch_gitkeep(events / "src" / "main" / "resources" / "schemas" / name)
+    (events / "src" / "main" / "java").mkdir(parents=True, exist_ok=True)
+    (events / "src" / "main" / "resources" / "schemas" / name).mkdir(parents=True, exist_ok=True)
 
     # Módulo core
     core = base / f"{module}-core"
@@ -463,7 +459,7 @@ def main() -> None:
 
     # Esqueleto DDD por capas
     for sub in DOMAIN_FOLDERS:
-        touch_gitkeep(java_root / name / Path(sub))
+        (java_root / name / Path(sub)).mkdir(parents=True, exist_ok=True)
 
     print(f"OK: proyecto creado en {base}")
     print(f"   - Padre:  sergioricart-{project} 0.0.1-SNAPSHOT")
